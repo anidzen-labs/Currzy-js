@@ -12,8 +12,7 @@ import {
 } from "@src/providers/cbrf/types";
 
 export class CbrfProvider {
-  private url =
-      "https://api.allorigins.win/raw?url=https://www.cbr.ru/scripts/XML_daily.asp";
+  private url = "https://www.cbr.ru/scripts/XML_daily.asp";
 
   private rates: Record<CurrencyCode, Rate> = {} as Record<CurrencyCode, Rate>;
   private lastUpdate: Date | null = null;
