@@ -13,6 +13,7 @@ module.exports = [
             },
             globals: {
                 ...globals.node,
+                console: "readonly"
             },
         },
 
@@ -33,6 +34,7 @@ module.exports = [
             },
             globals: {
                 ...globals.node,
+                console: "readonly"
             },
         },
         plugins: { "@typescript-eslint": tsPlugin },
