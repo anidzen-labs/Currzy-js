@@ -1,5 +1,6 @@
 const tsPlugin = require("@typescript-eslint/eslint-plugin");
 const tsParser = require("@typescript-eslint/parser");
+const globals = require("globals");
 
 module.exports = [
     {
@@ -10,11 +11,12 @@ module.exports = [
                 ecmaVersion: 2024,
                 sourceType: "module",
             },
-            env: {
-                node: true,
-                es2024: true,
+            globals: {
+                ...globals.browser,
+                ...globals.node,
             },
         },
+
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
             "no-undef": "error",
@@ -30,12 +32,14 @@ module.exports = [
                 ecmaVersion: 2024,
                 sourceType: "module",
             },
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
         },
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
-            "no-undef": "error",
             "import/no-relative-parent-imports": "off",
-            "no-console": "off",
         },
     },
 ];
