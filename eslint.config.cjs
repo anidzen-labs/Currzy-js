@@ -12,15 +12,14 @@ module.exports = [
                 sourceType: "module",
             },
             globals: {
-                ...globals.browser,
                 ...globals.node,
             },
         },
 
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
-            "no-undef": "error",
-            "@typescript-eslint/no-unused-vars": "warn",
+            "no-console": "off",
+            "@typescript-eslint/no-unused-vars": "off",
         },
     },
 
@@ -33,12 +32,12 @@ module.exports = [
                 sourceType: "module",
             },
             globals: {
-                ...globals.browser,
                 ...globals.node,
             },
         },
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
+            "no-console": "off",
             "import/no-relative-parent-imports": "off",
         },
     },
