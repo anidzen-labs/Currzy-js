@@ -1,6 +1,5 @@
 import { ofetch } from "ofetch";
 import { XMLParser } from "fast-xml-parser";
-import { createCacheDriver } from "@src/cache";
 import {
   Rate,
   CurrencyCode,
@@ -8,42 +7,14 @@ import {
   assertCurrency,
   CbrfValute,
   CbrfData,
-  CbrfCache,
 } from "@src/providers/cbrf/types";
 
 export class CbrfProvider {
   private url = "https://www.cbr.ru/scripts/XML_daily.asp";
-
   private rates: Record<CurrencyCode, Rate> = {} as Record<CurrencyCode, Rate>;
   private lastUpdate: Date | null = null;
-  private initialized = false;
-  private cacheTTL = 1000 * 60 * 60;
-  private cache = createCacheDriver<CbrfCache>("cbrf");
 
   public availableCurrencies: readonly CurrencyCode[] = AVAILABLE_CURRENCIES;
-
-  private async loadCache() {
-    const data = await this.cache.load();
-    if (data) {
-      this.rates = data.payload.rates;
-      this.lastUpdate = data.lastUpdate ? new Date(data.lastUpdate) : null;
-      this.initialized = true;
-    }
-  }
-
-  private async saveCache() {
-    await this.cache.save({
-      payload: { rates: this.rates },
-      lastUpdate: this.lastUpdate ? this.lastUpdate.toISOString() : null,
-    });
-  }
-
-  public async clearCache() {
-    await this.cache.clear();
-    this.rates = {} as Record<CurrencyCode, Rate>;
-    this.lastUpdate = null;
-    this.initialized = false;
-  }
 
   private async fetchRates(): Promise<void> {
     try {
@@ -71,31 +42,20 @@ export class CbrfProvider {
 
       this.rates["RUB"] = { code: "RUB", nominal: 1, value: 1, vunitRate: 1 };
       this.lastUpdate = new Date();
-      this.initialized = true;
-      await this.saveCache();
     } catch (e) {
       console.error("Error fetching CBRF rates:", e);
-      if (!this.initialized) {
-        await this.loadCache();
-        if (!this.initialized) throw new Error("No CBRF data and no cache");
-      }
+      throw new Error("Failed to fetch CBRF data");
     }
   }
 
-  private async ensureInitialized(): Promise<void> {
-    if (!this.initialized) await this.loadCache();
-
-    const expired =
-        this.lastUpdate === null ||
-        new Date().getTime() - this.lastUpdate.getTime() > this.cacheTTL;
-
-    if (!this.initialized || expired) {
+  private async ensureRates(): Promise<void> {
+    if (!Object.keys(this.rates).length) {
       await this.fetchRates();
     }
   }
 
   async getRate(code: string, base: string = "USD"): Promise<number> {
-    await this.ensureInitialized();
+    await this.ensureRates();
     assertCurrency(code);
     assertCurrency(base);
 
@@ -106,7 +66,7 @@ export class CbrfProvider {
   }
 
   async convert(amount: number, from: string, to: string): Promise<number> {
-    await this.ensureInitialized();
+    await this.ensureRates();
     assertCurrency(from);
     assertCurrency(to);
 
@@ -117,7 +77,7 @@ export class CbrfProvider {
   }
 
   async getAllRates(base: string = "USD"): Promise<Record<CurrencyCode, number>> {
-    await this.ensureInitialized();
+    await this.ensureRates();
     assertCurrency(base);
 
     const result: Partial<Record<CurrencyCode, number>> = {};
@@ -134,4 +94,3 @@ export class CbrfProvider {
     return this.lastUpdate;
   }
 }
-

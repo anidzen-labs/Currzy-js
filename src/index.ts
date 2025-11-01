@@ -21,13 +21,4 @@ export class Currzy {
   async getAllRatesTo(code?: string): Promise<Record<string, number | null>> {
     return await this.provider.getAllRates(code);
   }
-
-  async clearCache(): Promise<void> {
-    return this.provider.clearCache();
-  }
-
-  getLastUpdate(): Date | null {
-    return this.provider.getLastUpdate();
-  }
 }
-

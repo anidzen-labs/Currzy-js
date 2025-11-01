@@ -1,4 +1,3 @@
-// tests/providers/cbrf.test.ts
 import { describe, it, expect } from 'vitest'
 import { Currzy } from '../../src'
 
@@ -6,18 +5,18 @@ describe('CBRF Provider', () => {
     it('fetches rates, checks individual rates and performs conversions', async () => {
         const api = new Currzy('cbrf');
 
-        // ===== Все курсы относительно USD =====
-        console.log("\n===== Все курсы относительно USD =====");
+        // ===== All rates relative to USD =====
+        console.log("\n===== All rates relative to USD =====");
         const ratesToUSD = await api.getAllRatesTo('USD');
         console.table(ratesToUSD);
 
-        // ===== Все курсы относительно RUB =====
-        console.log("\n===== Все курсы относительно RUB =====");
+        // ===== All rates relative to RUB =====
+        console.log("\n===== All rates relative to RUB =====");
         const ratesToRUB = await api.getAllRatesTo("RUB");
         console.table(ratesToRUB);
 
-        // ===== Проверка отдельных курсов =====
-        console.log("===== Проверка отдельных курсов =====");
+        // ===== Check individual rates =====
+        console.log("===== Check individual rates =====");
         const testCurrencies = ["USD", "EUR", "RUB", "AMD", "GBP", "JPY"];
 
         for (const code of testCurrencies) {
@@ -26,8 +25,8 @@ describe('CBRF Provider', () => {
             expect(rate).toBeTypeOf('number');
         }
 
-        // ===== Проверка конверсий =====
-        console.log('\n===== Проверка конверсий =====');
+        // ===== Conversion tests =====
+        console.log('\n===== Conversion tests =====');
         const conversionTests: [number, string, string][] = [
             [100, 'USD', 'RUB'],
             [1000, 'RUB', 'USD'],
@@ -45,15 +44,11 @@ describe('CBRF Provider', () => {
             const back = await api.convert(converted, to, from);
 
             console.log(
-                `${amount} ${from} -> ${to} = ${converted.toFixed(4)} | обратная конверсия: ${back.toFixed(4)}`
+                `${amount} ${from} -> ${to} = ${converted.toFixed(4)} | reverse conversion: ${back.toFixed(4)}`
             );
 
             expect(converted).toBeTypeOf('number');
             expect(back).toBeTypeOf('number');
         }
-
-        // ===== Последнее обновление =====
-        console.log('\n===== Последнее обновление =====');
-        console.log(api.getLastUpdate());
     });
 });
