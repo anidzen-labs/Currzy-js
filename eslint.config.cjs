@@ -10,6 +10,10 @@ module.exports = [
                 ecmaVersion: 2024,
                 sourceType: "module",
             },
+            env: {
+                node: true,
+                es2024: true,
+            },
         },
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
@@ -29,7 +33,9 @@ module.exports = [
         },
         plugins: { "@typescript-eslint": tsPlugin },
         rules: {
+            "no-undef": "error",
             "import/no-relative-parent-imports": "off",
+            "no-console": "off",
         },
     },
 ];
