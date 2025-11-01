@@ -1,11 +1,12 @@
 {
   "name": "currzy",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Free, open-source library for fetching, managing, and converting up-to-date currency rates from multiple reliable sources with the ability to easily choose the source.",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.cjs",
   "typings": "dist/index.d.ts",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
     "build": "tsup",
     "test": "vitest",
@@ -48,12 +49,11 @@
     "ofetch": "^1.4.1"
   },
   "devDependencies": {
-    "vitepress": "^2.0.0-alpha.12",
-    "@types/node": "^22.7.6",
+    "@types/node": "^24.9.2",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "eslint": "^8.0.0",
+    "eslint": "^9.39.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.6"
   }
 }
